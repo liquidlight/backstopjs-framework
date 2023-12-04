@@ -1,26 +1,23 @@
 const fs = require('fs');
 const chalk = require('chalk');
-const puppeteer = require('puppeteer');
+const merge = require('deepmerge');
+
 
 module.exports = async (page, scenario, viewport, isReference, Engine, config) => {
+	const mergedConfig = (merge(config, scenario));
 
-	if (
-		config.loadCookies !== true &&
-		scenario.loadCookies !== true
-	) {
+	if (!mergedConfig.loadCookies) {
 		return;
 	}
-
-	// Get the dir to store cookies
-	const cookieDir = scenario.cookieDir ?? config.cookieDir;
 
 	// Access the URL we are using
 	const url = new URL(isReference ? scenario.referenceUrl : scenario.url);
 
-	const cookiePath = `${cookieDir}cookies.${url.host}.json`;
+	const cookieFile = `cookies.${ url.host }.json`;
+	const cookiePath = mergedConfig.cookieDir + cookieFile;
 
 	if (!fs.existsSync(cookiePath)) {
-		console.log(chalk.red(`🍪 No cookie file found: ${cookiePath}`))
+		console.log(chalk.red(`🍪 No cookie file found: ${cookieFile}`))
 		return;
 	}
 

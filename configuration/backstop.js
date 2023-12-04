@@ -53,6 +53,6 @@ module.exports = {
 	 */
 	httpAuth: false,
 	scrollWholePageBeforeImage: false,
-	loadCookieUrl: false,
+	loadCookies: false,
 	cookieDir: process.cwd() + '/backstop/'
 };
