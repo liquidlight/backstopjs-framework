@@ -9,3 +9,20 @@
 1. Create ref - `backstop:reference`
 1. Create test - `backstop:test`
 1. If you are happy with the changes - `backstop:approve`
+
+## Config
+
+`httpAuth`
+
+`scrollWholePageBeforeImage`
+
+`loadCookieUrl`
+
+`cookieDir`
+
+
+## Make Cookies
+
+```
+node ./node_modules/@liquidlight/backstopjs-framework/createCookies.js [url]
+```

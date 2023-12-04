@@ -1,5 +1,5 @@
-module.exports = async(page, scenario) => {
-	if (scenario.httpAuth) {
-		await page.authenticate(scenario.httpAuth);
+module.exports = async (page, scenario, viewport, isReference, Engine, config) => {
+	if (config.httpAuth || scenario.httpAuth) {
+		await page.authenticate(scenario.httpAuth ?? config.httpAuth);
 	}
 };

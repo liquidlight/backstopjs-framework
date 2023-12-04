@@ -46,5 +46,13 @@ module.exports = {
 	asyncCompareLimit: 50,
 
 	debug: false,
-	debugWindow: false
+	debugWindow: false,
+
+	/**
+	 * Custom config
+	 */
+	httpAuth: false,
+	scrollWholePageBeforeImage: false,
+	loadCookieUrl: false,
+	cookieDir: process.cwd() + '/backstop/'
 };

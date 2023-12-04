@@ -1,10 +1,26 @@
 const fs = require('fs');
 const chalk = require('chalk');
+const puppeteer = require('puppeteer');
 
-module.exports = async(page, scenario) => {
-	const cookiePath = scenario.cookiePath;
+module.exports = async (page, scenario, viewport, isReference, Engine, config) => {
 
-	if (scenario.loadCookies !== true || !fs.existsSync(cookiePath)) {
+	if (
+		config.loadCookies !== true &&
+		scenario.loadCookies !== true
+	) {
+		return;
+	}
+
+	// Get the dir to store cookies
+	const cookieDir = scenario.cookieDir ?? config.cookieDir;
+
+	// Access the URL we are using
+	const url = new URL(isReference ? scenario.referenceUrl : scenario.url);
+
+	const cookiePath = `${cookieDir}cookies.${url.host}.json`;
+
+	if (!fs.existsSync(cookiePath)) {
+		console.log(chalk.red(`🍪 No cookie file found: ${cookiePath}`))
 		return;
 	}
 
