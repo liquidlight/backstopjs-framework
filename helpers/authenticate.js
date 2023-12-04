@@ -1,5 +1,9 @@
+const merge = require('deepmerge');
+
 module.exports = async (page, scenario, viewport, isReference, Engine, config) => {
-	if (config.httpAuth || scenario.httpAuth) {
-		await page.authenticate(scenario.httpAuth ?? config.httpAuth);
+	const mergedConfig = merge(config, scenario);
+
+	if (mergedConfig.httpAuth) {
+		await page.authenticate(mergedConfig.httpAuth);
 	}
 };

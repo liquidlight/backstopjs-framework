@@ -51,6 +51,7 @@ module.exports = {
 	/**
 	 * Custom config
 	 */
+	removeCssAnimations: true,
 	httpAuth: false,
 	scrollWholePageBeforeImage: false,
 	loadCookies: false,

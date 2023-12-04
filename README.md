@@ -20,6 +20,8 @@
 
 `cookieDir`
 
+`removeCssAnimations`
+
 
 ## Make Cookies
 
