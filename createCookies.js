@@ -2,17 +2,23 @@
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 const chalk = require('chalk');
+const inquirer = require('inquirer');
 
-// Only paramter is the URL where you login
-if (process.argv.length !== 3) {
-	console.log(chalk.red('Please pass the login URL as the only parameter'))
-}
+const start = async () => {
+	console.log(chalk.yellow('🍪 Welcome to the cookie exporter'));
+	console.log('This allows you to export cookies for use with Backstop');
 
-// Set the URL
-let url = new URL(process.argv[2]);
+	let input = await inquirer.prompt({
+		type: 'input',
+		name: 'url',
+		message: 'What is the URL you want to get cookies for?'
+	}).then(res => res.url)
 
-// Create a login function
-(async () => {
+	let url = new URL(input);
+
+	console.log(chalk.white('🖥️ A browser will now open, please login and/or do the actions to generate the cookies.'));
+	console.log(chalk.yellow('> Return to the CLI once completed'));
+
 	// Create a new puppeteer browser
 	const browser = await puppeteer.launch({
 		// Change to `false` if you want to open the window
@@ -25,17 +31,25 @@ let url = new URL(process.argv[2]);
 	// Go to the URL
 	await page.goto(url);
 
-	// Wait for a selector to be loaded on the page -
-	// this helps make sure the page is fully loaded so you capture all the cookies
-	await page.waitForNavigation({ waitUntil: "load" });
+	let saveCookies = await inquirer.prompt({
+		type: 'confirm',
+		name: 'continue',
+		message: 'Do you want to save the current cookies?'
+	}).then(res => res.continue);
 
-	const cookies = JSON.stringify(await page.cookies());
-	if (!fs.existsSync('./backstop')) {
-		fs.mkdirSync('./backstop');
+	if (saveCookies) {
+		const pageCookies = await page.cookies()
+		const cookies = JSON.stringify(pageCookies);
+		if (!fs.existsSync('./backstop')) {
+			fs.mkdirSync('./backstop');
+		}
+
+		await fs.writeFileSync(`./backstop/cookies.${url.host}.json`, cookies);
+
+		console.log(chalk.yellow(`🍪 ${pageCookies.length} cookie${pageCookies.length == 1 ? '' : 's'} saved at:`), `./backstop/cookies.${url.host}.json`,);
 	}
 
-	await fs.writeFileSync(`./backstop/cookies.${url.host}.json`, cookies);
-
-	// Close the browser once you have finished
 	browser.close();
-})();
+};
+
+start();
