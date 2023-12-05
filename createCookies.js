@@ -4,7 +4,7 @@ const fs = require('fs');
 const chalk = require('chalk');
 const inquirer = require('inquirer');
 
-const start = async () => {
+const start = async() => {
 	console.log(chalk.yellow('🍪 Welcome to the cookie exporter'));
 	console.log('This allows you to export cookies for use with Backstop');
 
@@ -12,7 +12,7 @@ const start = async () => {
 		type: 'input',
 		name: 'url',
 		message: 'What is the URL you want to get cookies for?'
-	}).then(res => res.url)
+	}).then(res => res.url);
 
 	let url = new URL(input);
 
@@ -22,7 +22,7 @@ const start = async () => {
 	// Create a new puppeteer browser
 	const browser = await puppeteer.launch({
 		// Change to `false` if you want to open the window
-		headless: false,
+		headless: false
 	});
 
 	// Create a new browser page
@@ -38,7 +38,7 @@ const start = async () => {
 	}).then(res => res.continue);
 
 	if (saveCookies) {
-		const pageCookies = await page.cookies()
+		const pageCookies = await page.cookies();
 		const cookies = JSON.stringify(pageCookies);
 		if (!fs.existsSync('./backstop')) {
 			fs.mkdirSync('./backstop');
@@ -46,7 +46,7 @@ const start = async () => {
 
 		await fs.writeFileSync(`./backstop/cookies.${url.host}.json`, cookies);
 
-		console.log(chalk.yellow(`🍪 ${pageCookies.length} cookie${pageCookies.length == 1 ? '' : 's'} saved at:`), `./backstop/cookies.${url.host}.json`,);
+		console.log(chalk.yellow(`🍪 ${pageCookies.length} cookie${pageCookies.length == 1 ? '' : 's'} saved at:`), `./backstop/cookies.${url.host}.json`);
 	}
 
 	browser.close();

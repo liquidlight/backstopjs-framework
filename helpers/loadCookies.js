@@ -1,11 +1,8 @@
 const fs = require('fs');
 const chalk = require('chalk');
-const merge = require('deepmerge');
 
-module.exports = async (page, scenario, viewport, isReference, Engine, config) => {
-	const mergedConfig = merge(config, scenario);
-
-	if (!mergedConfig.loadCookies) {
+module.exports = async(page, config, scenario, isReference) => {
+	if (!config.loadCookies) {
 		return;
 	}
 
@@ -13,10 +10,10 @@ module.exports = async (page, scenario, viewport, isReference, Engine, config) =
 	const url = new URL(isReference ? scenario.referenceUrl : scenario.url);
 
 	const cookieFile = `cookies.${ url.host }.json`;
-	const cookiePath = mergedConfig.cookieDir + cookieFile;
+	const cookiePath = config.cookieDir + cookieFile;
 
 	if (!fs.existsSync(cookiePath)) {
-		console.log(chalk.red(`🍪 No cookie file found: ${cookieFile}`))
+		console.log(chalk.red(`🍪 No cookie file found: ${cookieFile}`));
 		return;
 	}
 

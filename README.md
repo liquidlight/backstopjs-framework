@@ -35,24 +35,66 @@ This framework allows you to have minimal setup configuration for getting up and
 
 The `backstop.config.js` allows for configuring BackstopJS according to their configuration with some extra magic on top.
 
-To get started, copy the below into your JavaScript file
+### Minimal Configuration
+
+To get started, copy the below into your JavaScript file - this is a minimal configuration. Duplicate the paths object for each page. If you want to test a second URL, then duplicate the whole site object
+
+```js
+module.exports = require('@liquidlight/backstopjs-framework')([
+	{
+		envs: {
+			test: {
+				domain: 'https://www.liquidlight.co.uk',
+			},
+		},
+		paths: [
+			{
+				label: 'Homepage',
+				path: '/',
+			}
+		],
+	}
+]);
+```
+
+### Expanded Configuration
 
 ```js
 module.exports = require('@liquidlight/backstopjs-framework')(
-	{
-		// Domains
-		domains: {
-			// What URL is used for tests (usually development site)
-			base: 'https://liquidlight.ddev.site/'
-			// Optional: What URL is used for creating references (usually live)
-			reference: 'https://www.liquidlight.co.uk/'
-		},
-	},
 	[
-		// What pages to test
+		{
+			label: 'Liquid Light',
+			envs: {
+				test: {
+					domain: 'https://liquidlight.ddev.site',
+				},
+				reference: {
+					domain: 'https://www.liquidlight.co.uk',
+				},
+			},
+			paths: [
+				{
+					label: 'Homepage',
+					path: '/',
+				}
+			],
+		},
+		{
+			label: 'TYPO3',
+			envs: {
+				test: {
+					domain: 'https://typo3.com/'
+				},
+			},
+			paths: [
+				{
+					label: 'Homepage',
+					path: '/',
+				}
+			],
+		}
 	]
 );
-
 ```
 
 

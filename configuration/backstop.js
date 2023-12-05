@@ -34,6 +34,8 @@ module.exports = {
 		// 'CI'
 	],
 
+	scenarios: [],
+
 	engine: 'puppeteer',
 	engineOptions: {
 		headless: 'new',
@@ -46,14 +48,5 @@ module.exports = {
 	asyncCompareLimit: 50,
 
 	debug: false,
-	debugWindow: false,
-
-	/**
-	 * Custom config
-	 */
-	removeCssAnimations: true,
-	httpAuth: false,
-	scrollWholePageBeforeImage: false,
-	loadCookies: false,
-	cookieDir: process.cwd() + '/backstop/'
+	debugWindow: false
 };

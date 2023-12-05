@@ -1,50 +1,56 @@
 const merge = require('deepmerge');
 
-const scenarioConfigurationDefaults = require('./configuration/url');
 const backstopConfigurationDefaults = require('./configuration/backstop');
+const customConfigurationDefaults = require('./configuration/custom');
 
 module.exports = (
-	configuration = {
-		domains: {
-			base: 'https://www.liquidlight.co.uk/'
-		},
-		scenarios: {},
-		backstop: {}
-	},
-	urls = []
+	sites = [],
+	backstop = {}
 ) => {
-
 	// Set default options based on configuration and merge with what is passed in
-	let scenarioConfiguration = merge(scenarioConfigurationDefaults, configuration.scenarios ?? {});
-	let backstopConfiguration = merge(backstopConfigurationDefaults, configuration.backstop ?? {});
+	let backstopConfiguration = merge.all([
+		backstopConfigurationDefaults,
+		customConfigurationDefaults,
+		backstop
+	]);
 
-	// Are we passing URLs with shortcut ref?
-	if(urls.length) {
-		// Override all configured scenarios if using the shortcut
-		backstopConfiguration.scenarios = [];
+	// Add our passed in config to global so we can access if we want
+	// backstopConfiguration.extended = sites;
 
-		// Process the domain name
-		let referenceDomain = configuration.domains.base;
-		if (Object.prototype.hasOwnProperty.call(configuration.domains, 'reference')) {
-			referenceDomain = configuration.domains.reference;
+	// Have we configured using the extension
+	if (sites.length) {
+		// Loop through each site sites
+		for(let site of sites) {
+			// Process the domain name
+			let testEnv = site.envs.test,
+				referenceEnv = testEnv;
+			if (Object.prototype.hasOwnProperty.call(site.envs, 'reference')) {
+				// Get our reference env
+				referenceEnv = site.envs.reference;
+			} else {
+				// Set reference as exactly the same as test
+				site.envs.reference = site.envs.test;
+			}
+			// Loop through URLs
+			for (let url of site.paths) {
+				/**
+				 * Domains
+				 */
+				// Set the base url
+				url.label = (site.label ? site.label + ' - ' : '') + url.label;
+				// Set the base url
+				url.url = testEnv.domain.replace(/\/$/, '') + url.path;
+				// Set the reference URL with the domain
+				url.referenceUrl = referenceEnv.domain.replace(/\/$/, '') + url.path;
+				// Delete 'path' (not used by BackstopJS)
+				delete url.path;
+
+				url.site = site;
+
+				// Set the URL as a scenario
+				backstopConfiguration.scenarios.push(url);
+			}
 		}
-
-		// Loop through URLs
-		for (let url of urls) {
-			/**
-			 * Domains
-			 */
-			// Set the base url
-			url.url = configuration.domains.base + url.path;
-			// Set the reference URL with the domain
-			url.referenceUrl = referenceDomain + url.path;
-			// Delete 'path' (not used by BS)
-			delete url.path;
-
-			// Set the URL as a scenario
-			backstopConfiguration.scenarios.push(merge(url, scenarioConfiguration));
-		}
-
 	}
 
 	return backstopConfiguration;
