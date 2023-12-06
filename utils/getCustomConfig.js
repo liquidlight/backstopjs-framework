@@ -1,6 +1,6 @@
 const customConfigurationDefaults = require('./../configuration/custom');
 
-module.exports = async(config, scenario, isReference) => {
+module.exports = (config, scenario, isReference) => {
 	// Use our custom defaults
 	let output = customConfigurationDefaults,
 		// Get the env based on the reference
