@@ -100,7 +100,7 @@ Although this option can be placed in scenarios, this framework allows it to be 
 
 ## Installation
 
-1. `npm i @liquidlight/backstopjs-framework --save-dev` - We don't want it installed in production
+1. `npm i @liquidlight/backstopjs-framework -D --save` - We don't want it installed in production
 2. Create a `backstop.config.js` - this can either be in the root of your project or in a sub-directory if preferred - see the [configuration file](#configuration-file) section for how this works
 3. Add `backstop` to your `.gitignore` (or, if you have put it in a sub-directory add `./[subdir]/backstop`
 4. **Optional** add the following to the `scripts` block in your `package.json` (don't forget to update the config path if you put it elsewhere)
