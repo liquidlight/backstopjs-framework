@@ -45,7 +45,9 @@ module.exports = (
 				// Delete 'path' (not used by BackstopJS)
 				delete url.path;
 
-				url.site = site;
+				let localSite = {...site};
+				delete localSite.paths;
+				url.site = localSite;
 
 				// Set the URL as a scenario
 				backstopConfiguration.scenarios.push(url);

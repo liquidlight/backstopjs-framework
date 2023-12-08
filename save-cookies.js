@@ -27,12 +27,12 @@ const main = async() => {
 		backstopConfigFileName = path.isAbsolute(argsOptions.config) ? argsOptions.config : path.join(cwd, argsOptions.config);
 
 	// Load the backstop config
-	userConfig = require(backstopConfigFileName);
+	let userConfig = require(backstopConfigFileName);
 
 	// Set some default vars
 	let domains = [],
 		cookiePaths = [
-			(userConfig.paths.engine_scripts + '/cookies.json')
+			(userConfig.paths.engine_scripts + '/cookies.json').replace(cwd, './')
 		];
 
 	// Has a global cookie path been defined?
@@ -59,12 +59,24 @@ const main = async() => {
 		if (Object.prototype.hasOwnProperty.call(scenario, 'cookiePath')) {
 			cookiePaths.push(scenario.cookiePath);
 		}
+
+		// Has a custom cookiePath been defined?
+		if (Object.prototype.hasOwnProperty.call(scenario, 'site')) {
+			if (Object.prototype.hasOwnProperty.call(scenario.site, 'cookiePath')) {
+				cookiePaths.push(scenario.site.cookiePath);
+			}
+			for (let env in scenario.site.envs) {
+				if (Object.prototype.hasOwnProperty.call(scenario.site.envs[env], 'cookiePath')) {
+					cookiePaths.push(scenario.site.envs[env].cookiePath);
+				}
+			}
+		}
 	}
 
 	// Remove duplicate domains
 	domains = [...new Set(domains)];
 	// Remove duplicate cookiePaths and set as relative
-	cookiePaths = [...new Set(cookiePaths)].map(p => `.` + p.replace(cwd, ''));
+	cookiePaths = [...new Set(cookiePaths)];
 
 	console.log(chalk.yellow('🍪 Welcome to the cookie collector'));
 
