@@ -27,5 +27,8 @@
     "minimist": "^1.2.8",
     "path": "^0.12.7",
     "scroll-to-bottomjs": "^1.1.0"
+  },
+  "bin": {
+    "save-cookies": "./save-cookies.js"
   }
 }
