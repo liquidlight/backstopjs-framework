@@ -23,7 +23,7 @@
     "backstopjs": "^6.2.2",
     "chalk": "^4.1.2",
     "deepmerge": "^4.3.1",
-    "inquirer": "^8.2.6",
+    "inquirer": "^9.2.17",
     "minimist": "^1.2.8",
     "path": "^0.12.7",
     "scroll-to-bottomjs": "^1.1.0"
